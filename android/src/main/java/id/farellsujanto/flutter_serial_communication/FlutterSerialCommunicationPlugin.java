@@ -242,7 +242,9 @@ public class FlutterSerialCommunicationPlugin implements FlutterPlugin, MethodCa
   public void openPort() {
     try {
       usbSerialPort = driver.getPorts().get(0);
-      usbSerialPort.getControlLines();
+      // こちらと同様のエラーが出るためコメントアウト
+      // https://github.com/farellsujanto/flutter_serial_communication/issues/11
+      // usbSerialPort.getControlLines();
 
       UsbDeviceConnection usbConnection = usbManager.openDevice(driver.getDevice());
       usbSerialPort.open(usbConnection);
