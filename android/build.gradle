@@ -9,7 +9,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.0'
+        classpath 'com.android.tools.build:gradle:7.2.2'
     }
 }
 
@@ -37,5 +37,5 @@ android {
 }
 
 dependencies {
-    api 'com.github.mik3y:usb-serial-for-android:3.5.1'
+    api 'com.github.mik3y:usb-serial-for-android:3.8.0'
 }
