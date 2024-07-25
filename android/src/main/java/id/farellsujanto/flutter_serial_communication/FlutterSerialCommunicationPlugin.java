@@ -201,6 +201,11 @@ public class FlutterSerialCommunicationPlugin implements FlutterPlugin, MethodCa
     UsbSerialProber usbDefaultProber = UsbSerialProber.getDefaultProber();
     UsbSerialProber usbCustomProber = CustomProber.getCustomProber();
 
+    if (usbManager.getDeviceList().isEmpty()) {
+      handleConnectResult(false);
+      return;
+    }
+
     for(UsbDevice device : usbManager.getDeviceList().values()) {
       driver = usbDefaultProber.probeDevice(device);
       if(driver == null) {
