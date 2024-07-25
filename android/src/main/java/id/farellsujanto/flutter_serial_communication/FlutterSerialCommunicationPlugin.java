@@ -164,8 +164,7 @@ public class FlutterSerialCommunicationPlugin implements FlutterPlugin, MethodCa
 
     List<DeviceInfo> deviceInfoList = new ArrayList<>(availableDrivers.size());
 
-    for (UsbSerialDriver driver : availableDrivers) {
-      UsbDevice device = driver.getDevice();
+    for(UsbDevice device : usbManager.getDeviceList().values()) {
       deviceInfoList.add(new DeviceInfo(device));
     }
 
@@ -199,28 +198,20 @@ public class FlutterSerialCommunicationPlugin implements FlutterPlugin, MethodCa
       return;
     }
 
-    List<UsbSerialDriver> availableDrivers = UsbSerialProber
-        .getDefaultProber().findAllDrivers(usbManager);
-    List<DeviceInfo> availableDevices = getAvailableDevices();
-    if (availableDrivers.size() == 0 || availableDevices.size() == 0) {
+    UsbSerialProber usbDefaultProber = UsbSerialProber.getDefaultProber();
+    UsbSerialProber usbCustomProber = CustomProber.getCustomProber();
+
+    if (usbManager.getDeviceList().isEmpty()) {
       handleConnectResult(false);
       return;
     }
 
-    int index = -1;
-    for (int i = 0; i < availableDevices.size(); i++) {
-      if (availableDevices.get(i).deviceName.equals(name)) {
-        index = i;
-        break;
+    for(UsbDevice device : usbManager.getDeviceList().values()) {
+      driver = usbDefaultProber.probeDevice(device);
+      if(driver == null) {
+        driver = usbCustomProber.probeDevice(device);
       }
     }
-
-    if (index < 0) {
-      handleConnectResult(false);
-      return;
-    }
-
-    driver = availableDrivers.get(index);
 
     if (usbManager.hasPermission(driver.getDevice()) == false) {
       int flags = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
